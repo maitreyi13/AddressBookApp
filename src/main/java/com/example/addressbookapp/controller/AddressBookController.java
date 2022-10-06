@@ -22,15 +22,16 @@ public class AddressBookController {
     public String greet() {
         return "Welcome to Address Book Application";
     }
+
     @PostMapping("/create")
     public ResponseEntity<ResponseDTO> addContactData(@Valid @RequestBody ContactDTO contactDTO) {
-        Contact contact = null;
+        Contact contact;
         contact = iAddressBookService.createContact(contactDTO);
         ResponseDTO response = new ResponseDTO("Contact Created Successfully!", Optional.ofNullable(contact));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @RequestMapping(value = { "", "/", "/printAll" })
+    @RequestMapping(value = {"", "/", "/printAll"})
     public ResponseEntity<ResponseDTO> getContactData() {
         List<Contact> contactList = iAddressBookService.getContact();
         System.out.println(contactList.toString());
@@ -40,24 +41,39 @@ public class AddressBookController {
 
     @GetMapping("/print/{contactId}")
     public ResponseEntity<ResponseDTO> getContactData(@PathVariable("contactId") Long contactId) {
-            Optional<Contact> contact;
-            contact = iAddressBookService.getContactById(contactId);
-            ResponseDTO response = new ResponseDTO("Employee details by ID",contact);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+        Optional<Contact> contact;
+        contact = iAddressBookService.getContactById(contactId);
+        ResponseDTO response = new ResponseDTO("Employee details by ID", contact);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PutMapping("/update/{contactId}")
     public ResponseEntity<ResponseDTO> updateContactData(@PathVariable("contactId") Long contactId,
-                                                    @Valid @RequestBody ContactDTO contactDTO) {
+                                                         @Valid @RequestBody ContactDTO contactDTO) {
         Contact contact = iAddressBookService.updateContact(contactId, contactDTO);
-        ResponseDTO response = new ResponseDTO("Contact updated successfully!", "Updated id: \n"+contact);
+        ResponseDTO response = new ResponseDTO("Contact updated successfully!", "Updated id: \n" + contact);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{contactId}")
     public ResponseEntity<ResponseDTO> deleteContactData(@PathVariable("contactId") Long contactId) {
         iAddressBookService.deleteContact(contactId);
-        ResponseDTO respDTO= new ResponseDTO("Deleted Successfully", "Deleted id: " + contactId);
+        ResponseDTO respDTO = new ResponseDTO("Deleted Successfully", "Deleted id: " + contactId);
+        return new ResponseEntity<>(respDTO, HttpStatus.OK);
+    }
+
+    @GetMapping("/contactName/{firstName}")
+    public ResponseEntity<ResponseDTO> getPersonByName(@PathVariable String firstName) {
+        List<Contact> contactList;
+        contactList = iAddressBookService.findByName(firstName);
+        ResponseDTO respDTO = new ResponseDTO("Contact details of " + firstName + " :", contactList);
+        return new ResponseEntity<>(respDTO, HttpStatus.OK);
+    }
+    @GetMapping("/contactCity/{city}")
+    public ResponseEntity<ResponseDTO> getPersonByCity(@PathVariable String city) {
+        List<Contact> contactList;
+        contactList = iAddressBookService.findByCity(city);
+        ResponseDTO respDTO = new ResponseDTO("Contact details from " + city + " :", contactList);
         return new ResponseEntity<>(respDTO, HttpStatus.OK);
     }
 }

@@ -53,4 +53,13 @@ public class AddressBookService implements IAddressBookService {
     public void deleteContact(Long contactId) {
         repository.deleteById(contactId);
     }
+    @Override
+    public List<Contact> findByName(String firstName) {
+        return (repository.findPersonByName(firstName));
+    }
+    @Override
+    public List<Contact> findByCity(String city) {
+        return (repository.findPersonByCity(city));
+    }
+
 }

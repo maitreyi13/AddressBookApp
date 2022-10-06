@@ -15,4 +15,7 @@ public interface IAddressBookService {
     Optional<Contact> getContactById(Long contactId);
     void deleteContact(Long contactId);
 
+    List<Contact> findByName(String firstName);
+
+    List<Contact> findByCity(String city);
 }
